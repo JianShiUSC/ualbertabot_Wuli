@@ -130,23 +130,48 @@ int MeleeManager::getAttackPriority(BWAPI::Unit attacker, BWAPI::Unit unit)
 	//}
 
 	int distance = attacker->getDistance(unit);
-	int range = attacker->getType().groundWeapon().maxRange();
 	
-	if (attacker->getType() == BWAPI::UnitTypes::Protoss_Zealot) 
+	int range = attacker->getType().groundWeapon().maxRange();
+	BWAPI::Broodwar->printf("distance %d", range);
+	//BWAPI::Position base(BWAPI::Broodwar->self()->getStartLocation());
+
+	BWAPI::Broodwar->printf("total %d", unit->getHitPoints() + unit->getShields());
+	BWAPI::Broodwar->printf("hit %d", unit->getHitPoints());
+	BWAPI::Broodwar->printf("shield %d", unit->getShields());
+	
+	//attack range of zealot is 15
+	//attack range of dark templar is 15
+	//Health Point of zealot is 100, Shield 60
+
+	if (attacker->getType() == BWAPI::UnitTypes::Protoss_Zealot) //zealot vs zealot
 	{
 		if (unit->getType() == BWAPI::UnitTypes::Protoss_Zealot)
 		{
 			if (distance > range)
 			{
-				return 500 / (unit->getHitPoints() + unit->getShields()) + 500 / distance;
+				if (distance <= 150)
+				{
+					if (unit->getHitPoints() + unit->getShields() < 1)
+					{
+						return 360;//highest priority
+					}
+					return 160 / (unit->getHitPoints() + unit->getShields()) + 3000 / distance;
+				}
+				else if (distance > 150)//distance is too long, do not attack
+				{
+					return 0;
+				}
 			}
-			else if (distance <= range)
+			else if (distance <= range)//our zealot is being attacked
 			{
-				return 10000 / (unit->getHitPoints() + unit->getShields()) + 1000;
+				return 160 / (unit->getHitPoints() + unit->getShields()) + 360;
 			}
 		}
-	}
+		if (unit->getType() == BWAPI::UnitTypes::Protoss_Dark_Templar)
+		{
 
+		}
+	}
 
     if (attacker->getType() == BWAPI::UnitTypes::Protoss_Dark_Templar 
         && unit->getType() == BWAPI::UnitTypes::Terran_Missile_Turret
