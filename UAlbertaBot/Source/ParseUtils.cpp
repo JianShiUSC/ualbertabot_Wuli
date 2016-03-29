@@ -292,6 +292,7 @@ void ParseUtils::ParseTextCommand(const std::string & commandString)
     }
     else
     {
+		BWAPI::Broodwar->sendText("%s", commandString.c_str());
         UAB_ASSERT_WARNING(false, "Unknown command: %s", command.c_str());
     }
 }
