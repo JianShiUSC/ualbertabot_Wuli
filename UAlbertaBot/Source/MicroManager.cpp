@@ -109,7 +109,8 @@ void MicroManager::execute(const SquadOrder & inputOrder)
 		        executeMicro(workersRemoved);
             }
         }
-	}	
+	}
+
 }
 
 const BWAPI::Unitset & MicroManager::getUnits() const 
